@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Faisal Alsubie | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --primary: #20d3ee;
+    --primary-dim: rgba(32,211,238,0.12);
+    --primary-border: rgba(32,211,238,0.25);
+    --bg: #0b1517;
+    --bg2: #0f1d20;
+    --bg3: #152226;
+    --text: #e2eef0;
+    --muted: #6b8f96;
+    --card: #0f1d20;
+    --card-border: #1e3238;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; cursor: none; }
+  #cursor { position: fixed; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s, background 0.2s; mix-blend-mode: screen; }
+  #cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid var(--primary-border); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9990; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; height: 64px; background: rgba(11,21,23,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--card-border); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.04em; color: var(--primary); text-decoration: none; }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.2s; font-family: 'JetBrains Mono', monospace; }
+  .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); transition: all 0.3s; }
+  .mobile-menu { display: none; position: fixed; inset: 64px 0 0 0; z-index: 99; background: var(--bg); flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .mobile-menu a:hover { color: var(--primary); }
+  .page { display: none; padding-top: 64px; min-height: 100vh; }
+  .page.active { display: block; }
+  #home { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 80px 5vw 60px; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(32,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(32,211,238,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 75%); }
+  .hero-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(32,211,238,0.07) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; width: 100%; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--primary); padding: 6px 14px; border-radius: 2px; border: 1px solid var(--primary-border); background: var(--primary-dim); margin-bottom: 2rem; }
+  .hero-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(32,211,238,0.4); } 50% { opacity:0.7; box-shadow:0 0 0 6px rgba(32,211,238,0); } }
+  .hero-name { font-size: clamp(3rem,9vw,8rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.03em; background: linear-gradient(135deg,#fff 0%,#c8edf2 40%,var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+  .hero-role { font-family: 'JetBrains Mono', monospace; font-size: clamp(0.85rem,1.8vw,1.1rem); color: var(--muted); font-weight: 400; margin-bottom: 1.5rem; }
+  .hero-role .accent { color: var(--primary); }
+  .hero-bio { font-size: clamp(1rem,1.6vw,1.15rem); color: #7fa8b0; line-height: 1.7; max-width: 580px; margin-bottom: 3rem; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: #0b1517; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; border-radius: 2px; cursor: none; text-decoration: none; transition: all 0.2s; position: relative; overflow: hidden; }
+  .btn-primary::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.15); transform: translateX(-100%); transition: transform 0.3s; }
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 13px 28px; border: 1px solid var(--card-border); border-radius: 2px; cursor: none; text-decoration: none; transition: all 0.2s; }
+  .btn-secondary:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
+  .hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 8px; animation: float 2.5s ease-in-out infinite; }
+  .hero-scroll::after { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom,var(--primary),transparent); }
+  @keyframes float { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(6px); } }
+  section { padding: 100px 5vw; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+  .section-title { font-size: clamp(2rem,4vw,3rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.5rem; }
+  .section-desc { color: var(--muted); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
+  .section-header { margin-bottom: 4rem; }
+  .divider { width: 48px; height: 2px; background: var(--primary); margin: 1.5rem 0; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+  .about-text p { color: #7fa8b0; line-height: 1.8; font-size: 1rem; margin-bottom: 1.5rem; }
+  .about-text p strong { color: var(--text); }
+  .about-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2rem; }
+  .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 2px; border: 1px solid var(--primary-border); background: var(--primary-dim); color: var(--primary); }
+  .skills-col h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--card-border); }
+  .skill-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .skill-name { font-size: 0.9rem; color: var(--text); }
+  .skill-bar { width: 120px; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+  .skill-fill { height: 100%; background: var(--primary); border-radius: 2px; transform-origin: left; animation: expand 1.2s ease forwards; transform: scaleX(0); }
+  @keyframes expand { to { transform: scaleX(1); } }
+  .skills-grid { display: grid; gap: 2.5rem; }
+  .exp-timeline { max-width: 780px; }
+  .exp-item { display: grid; grid-template-columns: 120px 1fr; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--card-border); position: relative; }
+  .exp-item:last-child { border-bottom: none; }
+  .exp-date { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); padding-top: 4px; line-height: 1.5; }
+  .exp-role { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .exp-company { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--primary); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
+  .exp-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+  .exp-dot { position: absolute; left: 108px; top: 28px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); border: 2px solid var(--bg2); box-shadow: 0 0 0 3px var(--primary-border); }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .project-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 4px; overflow: hidden; cursor: none; transition: border-color 0.3s, transform 0.3s; position: relative; }
+  .project-card:hover { border-color: var(--primary-border); transform: translateY(-4px); }
+  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-thumb { height: 200px; position: relative; overflow: hidden; background: var(--bg3); }
+  .project-thumb-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.4s ease; }
+  .project-card:hover .project-thumb-inner { transform: scale(1.05); }
+  .project-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 40%,rgba(15,29,32,0.9) 100%); }
+  .project-tags { position: absolute; bottom: 12px; left: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; background: rgba(11,21,23,0.8); backdrop-filter: blur(8px); border: 1px solid var(--primary-border); color: var(--primary); border-radius: 2px; }
+  .project-body { padding: 1.5rem; }
+  .project-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .project-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; }
+  .project-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); text-decoration: none; transition: gap 0.2s; cursor: none; }
+  .project-link:hover { gap: 10px; }
+  #project-detail { display: none; }
+  #project-detail.active { display: block; }
+  .detail-hero { height: 380px; position: relative; overflow: hidden; }
+  .detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 30%,var(--bg) 100%); }
+  .detail-content { max-width: 860px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+  .detail-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: none; border: none; background: none; margin-bottom: 2.5rem; transition: color 0.2s; padding: 0; }
+  .detail-back:hover { color: var(--primary); }
+  .detail-title { font-size: clamp(2rem,5vw,3.5rem); font-weight: 800; margin-bottom: 0.5rem; }
+  .detail-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--primary); margin-bottom: 2rem; }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 3rem; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 300px; gap: 4rem; }
+  .detail-section { margin-bottom: 2.5rem; }
+  .detail-section h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+  .detail-section p { color: #7fa8b0; line-height: 1.8; font-size: 0.95rem; }
+  .detail-section ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .detail-section ul li { display: flex; align-items: center; gap: 8px; color: #7fa8b0; font-size: 0.9rem; }
+  .detail-section ul li::before { content: '›'; color: var(--primary); font-size: 1.1rem; }
+  .meta-box { background: var(--bg2); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .meta-box h4 { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem; }
+  .meta-box p { color: #7fa8b0; font-size: 0.88rem; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; max-width: 1000px; margin: 0 auto; align-items: start; }
+  .contact-links { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+  .contact-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 4px; text-decoration: none; transition: all 0.2s; cursor: none; }
+  .contact-link:hover { border-color: var(--primary-border); background: var(--bg3); }
+  .contact-link-icon { width: 40px; height: 40px; border-radius: 2px; background: var(--primary-dim); border: 1px solid var(--primary-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contact-link-icon svg { width: 20px; height: 20px; fill: var(--primary); }
+  .contact-link-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 2px; }
+  .contact-link-value { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .form-input, .form-textarea { background: var(--card); border: 1px solid var(--card-border); border-radius: 2px; padding: 12px 16px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; resize: none; }
+  .form-input:focus, .form-textarea:focus { border-color: var(--primary); }
+  .form-textarea { min-height: 130px; }
+  footer { background: var(--bg2); border-top: 1px solid var(--card-border); padding: 2.5rem 5vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-left { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; }
+  .footer-left strong { color: var(--primary); }
+  .footer-right { display: flex; align-items: center; gap: 1.5rem; }
+  .footer-nav { display: flex; gap: 1.5rem; }
+  .footer-nav a { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-nav a:hover { color: var(--primary); }
+  .scroll-top { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--card-border); border-radius: 2px; cursor: none; color: var(--muted); background: none; transition: all 0.2s; font-size: 1.1rem; }
+  .scroll-top:hover { border-color: var(--primary); color: var(--primary); }
+  .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .glitch { position: relative; }
+  .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; right: 0; background: linear-gradient(135deg,#fff 0%,#c8edf2 40%,var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; opacity: 0; }
+  .glitch:hover::before { animation: glitch1 0.4s ease; clip-path: polygon(0 0,100% 0,100% 40%,0 40%); transform: translate(-3px,0); }
+  .glitch:hover::after { animation: glitch2 0.4s ease 0.05s; clip-path: polygon(0 60%,100% 60%,100% 100%,0 100%); transform: translate(3px,0); }
+  @keyframes glitch1 { 0%,100% { opacity:0; } 20%,80% { opacity:0.7; } }
+  @keyframes glitch2 { 0%,100% { opacity:0; } 20%,80% { opacity:0.5; } }
+  .page-transition { animation: pageIn 0.35s ease; }
+  @keyframes pageIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @media (max-width:768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    .exp-dot { display: none; }
+    section { padding: 70px 5vw; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="navigate('home')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#20d3ee" stroke-width="2.5">
+      <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+    </svg>
+    Faisal<span>.Alsubie</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="navigate('home')" data-page="home">Home</a></li>
+    <li><a href="#" onclick="navigate('about')" data-page="about">About</a></li>
+    <li><a href="#" onclick="navigate('projects')" data-page="projects">Projects</a></li>
+    <li><a href="#" onclick="navigate('contact')" data-page="contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="navigate('home');toggleMenu()">Home</a>
+  <a href="#" onclick="navigate('about');toggleMenu()">About</a>
+  <a href="#" onclick="navigate('projects');toggleMenu()">Projects</a>
+  <a href="#" onclick="navigate('contact');toggleMenu()">Contact</a>
+</div>
+
+<!-- ══════ HOME ══════ -->
+<div id="home" class="page active">
+  <section style="position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px);padding:80px 5vw 100px;">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-tag"><span class="dot"></span> Available for new projects</div>
+      <h1 class="hero-name glitch" data-text="Faisal Alsubie">Faisal Alsubie</h1>
+      <p class="hero-role">Computer Science Graduate <span class="accent">—</span> Game Developer <span class="accent">&amp;</span> Software Engineer</p>
+      <p class="hero-bio">Crafting immersive experiences through code and gameplay. Specialized in building interactive worlds, high-performance software, and bringing stories to life through games.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#" onclick="navigate('projects')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          View Projects
+        </a>
+        <a class="btn-secondary" href="https://github.com/FesalAlsubie" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.412-4.041-1.412-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a class="btn-secondary" href="https://www.linkedin.com/in/fesal-alsubie" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll">scroll</div>
+ </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════ ABOUT ══════ -->
+<div id="about" class="page">
+  <section>
+    <div class="section-label">// about me</div>
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <h2 class="section-title">Building worlds,<br>one line at a time.</h2>
+        <div class="divider"></div>
+        <p>Hi, I'm <strong>Faisal Alsubie</strong> — a Computer Science graduate with a passion for game development and interactive storytelling. I bridge the gap between technical precision and creative vision.</p>
+        <p>From building AI-driven systems to crafting narrative experiences, I bring the same intensity to every project. I led The Game Hub student community, organized events, and helped foster a culture of creativity.</p>
+        <p>When I'm not writing C# or Blueprints, I'm exploring how stories, systems, and mechanics can come together to create something truly memorable.</p>
+        <div class="about-badges">
+          <span class="badge">Unity</span><span class="badge">Unreal Engine 5</span>
+          <span class="badge">C#</span><span class="badge">C++</span>
+          <span class="badge">Java</span><span class="badge">Python</span>
+          <span class="badge">Flutter</span><span class="badge">Game Design</span>
+          <span class="badge">Narrative Design</span>
+        </div>
+      </div>
+      <div class="fade-in" style="animation-delay:0.15s">
+        <div class="skills-grid">
+          <div class="skills-col">
+            <h3>Programming</h3>
+            <div class="skill-item"><span class="skill-name">C# / Unity</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.3s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">C++ / UE5</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.4s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Java</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.5s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.6s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Flutter</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.65s"></div></div></div>
+          </div>
+          <div class="skills-col" style="margin-top:1.5rem;">
+            <h3>Game Development</h3>
+            <div class="skill-item"><span class="skill-name">Unity Engine</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.7s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Unreal Engine 5</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.8s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Game Design</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.9s"></div></div></div>
+          </div>
+          <div class="skills-col" style="margin-top:1.5rem;">
+            <h3>Other Skills</h3>
+            <div class="skill-item"><span class="skill-name">PC Networks</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:1.1s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">PC Building</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:1.2s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Community Leadership</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:1.3s"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--bg2);">
+    <div class="section-label">// experience</div>
+    <h2 class="section-title" style="margin-bottom:3rem;">Where I've been.</h2>
+    <div class="exp-timeline fade-in">
+      <div class="exp-item">
+        <div class="exp-date">2026 —<br>Present</div>
+        <div>
+          <div class="exp-dot"></div>
+          <div class="exp-role">Volunteering as the President of The Game Hub</div>
+          <div class="exp-company">Student Community · SDA | Saudi Digital Academy |</div>
+          <div class="exp-desc">Led and grew a student game development community. Organized game jams, workshops, and events. Mentored junior members and built a collaborative creative environment for aspiring developers.</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">2025</div>
+        <div>
+          <div class="exp-dot"></div>
+          <div class="exp-role">IT Trainer</div>
+          <div class="exp-company">PC Networks &amp; Cybersecurity Fundamentals</div>
+          <div class="exp-desc">Delivered training sessions covering core networking concepts and cybersecurity fundamentals. Developed curriculum materials and hands-on exercises to engage learners of varying skill levels.</div>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">2024</div>
+        <div>
+          <div class="exp-dot"></div>
+          <div class="exp-role">IT Intern</div>
+          <div class="exp-company">Saudi Electricity Company</div>
+          <div class="exp-desc">Worked on internal IT infrastructure and support. Gained hands-on experience with enterprise networks, systems administration, and operational cybersecurity practices in a large-scale industrial environment.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════ PROJECTS ══════ -->
+<div id="projects" class="page">
+  <section>
+    <div class="section-label">// projects</div>
+    <div class="section-header">
+      <h2 class="section-title">Things I've built.</h2>
+      <div class="divider"></div>
+      <p class="section-desc">A collection of games and software projects — each one a new experiment in storytelling, systems, or performance.</p>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Sheherazade -->
+      <div class="project-card" onclick="openProject('sheherazade')">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="padding:0;overflow:hidden;background:#1a0a2e;">
+            <img src="https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png"
+                 alt="Sheherazade: Last Tale, One More Night"
+                 style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags">
+            <span class="tag">Visual Novel</span>
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">Sheherazade: Last Tale, One More Night</div>
+          <div class="project-desc">A visual novel inspired by 1001 Nights with a narrative twist — the king tells the stories, and Sheherazade becomes the judge.</div>
+          <span class="project-link">View Project <span class="arrow">→</span></span>
+        </div>
+      </div>
+
+      <!-- Let Me Work In Peace -->
+      <div class="project-card" onclick="openProject('letmework')">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="padding:0;overflow:hidden;background:#0a1a10;">
+            <img src="https://img.itch.zone/aW1nLzI1NTAwMjMzLnBuZw==/original/pUv%2FF2.png"
+                 alt="LET ME WORK IN PEACE"
+                 style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags">
+            <span class="tag">Comedy Game</span>
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">LET ME WORK IN PEACE</div>
+          <div class="project-desc">A chaotic comedy game simulating the absolute mayhem of working in customer service — because someone had to.</div>
+          <span class="project-link">View Project <span class="arrow">→</span></span>
+        </div>
+      </div>
+
+      <!-- Coming soon -->
+      <div class="project-card" style="opacity:0.5;cursor:default;">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="background:var(--bg3);">
+            <span style="font-size:2rem;color:var(--muted);">?</span>
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags"><span class="tag">Coming Soon</span></div>
+        </div>
+        <div class="project-body">
+          <div class="project-title" style="color:var(--muted);">Next Project</div>
+          <div class="project-desc">Something new is in development. Stay tuned.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════ PROJECT DETAIL ══════ -->
+<div id="project-detail" class="page">
+
+  <!-- SHEHERAZADE DETAIL -->
+  <div id="detail-sheherazade" class="detail-page" style="display:none;">
+    <div class="detail-hero" style="background:#1a0a2e;">
+      <img src="https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png"
+           alt="Sheherazade: Last Tale, One More Night"
+           style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.75;" />
+      <div class="detail-hero-overlay"></div>
+    </div>
+    <div class="detail-content">
+      <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
+      <div class="section-label">// visual novel · 2024</div>
+      <h1 class="detail-title">Sheherazade: Last Tale,<br>One More Night</h1>
+      <div class="detail-subtitle">A narrative inversion of the 1001 Nights</div>
+      <div class="detail-tags">
+        <span class="tag">Visual Novel</span><span class="tag">Unity</span>
+        <span class="tag">C#</span><span class="tag">Narrative Design</span><span class="tag">2D Art</span>
+      </div>
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h3>About the Game</h3>
+            <p>Sheherazade: Last Tale, One More Night is a narrative-driven visual novel that takes the iconic 1001 Nights story and flips the dynamic entirely. In this version, the king is the storyteller and Sheherazade sits in judgment — deciding whether each tale is worthy of her mercy or condemnation.</p>
+            <br>
+            <p>Each night presents a new tale as the king, and it must be an interesting teal or you die .</p>
+          </div>
+          <div class="detail-section">
+            <h3>My Role</h3>
+            <ul>
+              <li>Lead Developer &amp; Designer</li>
+              <li>branching dialogue system</li>
+              <li>Unity implementation of the visual novel engine</li>
+              <li>Custom scene transition system</li>
+              <li>Audio implementation</li>
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h3>Technical Highlights</h3>
+            <p>Built a custom dialogue engine in Unity with C# supporting branching paths, character expressions, scene changes, and audio cues — all data-driven via ScriptableObjects for easy content authoring.</p>
+          </div>
+        </div>
+        <div>
+          <div class="meta-box"><h4>Platform</h4><p>PC (Windows / Mac)</p></div>
+          <div class="meta-box"><h4>Engine</h4><p>Unity</p></div>
+          <div class="meta-box"><h4>Languages</h4><p>C# · JSON</p></div>
+          <div class="meta-box"><h4>Team Size</h4><p>Small indie team</p></div>
+          <a class="btn-secondary" href="https://thehubsquad.itch.io/sheherazade-last-tale-one-more-night"
+             style="width:100%;justify-content:center;margin-top:0.5rem;" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Play on itch.io
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LET ME WORK IN PEACE DETAIL -->
+  <div id="detail-letmework" class="detail-page" style="display:none;">
+    <div class="detail-hero" style="background:#0a1a10;">
+      <img src="https://img.itch.zone/aW1nLzI1NTAwMjMzLnBuZw==/original/pUv%2FF2.png"
+           alt="LET ME WORK IN PEACE"
+           style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.75;" />
+      <div class="detail-hero-overlay"></div>
+    </div>
+    <div class="detail-content">
+      <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
+      <div class="section-label">// comedy game · 2024</div>
+      <h1 class="detail-title">LET ME WORK<br>IN PEACE</h1>
+      <div class="detail-subtitle">A customer service survival simulator</div>
+      <div class="detail-tags">
+        <span class="tag">Comedy</span><span class="tag">Unity</span>
+        <span class="tag">C#</span><span class="tag">Game Jam</span><span class="tag">Simulation</span>
+      </div>
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h3>About the Game</h3>
+            <p>LET ME WORK IN PEACE is a chaotic, tongue-in-cheek simulation game that throws you into the deep end of the worst customer service job imaginable. Every customer is unreasonable. Every request is impossible. Every second is suffering.</p>
+            <br>
+            <p>Inspired by real-life workplace chaos, the game layers absurd requests, escalating difficulty, and dark humor into a surprisingly stressful yet cathartic experience. The joke is the gameplay loop.</p>
+          </div>
+          <div class="detail-section">
+            <h3>My Role</h3>
+            <ul>
+              <li>Game designer &amp; programmer</li>
+              <li>Core gameplay loop and customer AI system</li>
+              <li>Wrote all in-game dialogue and customer personalities</li>
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h3>Technical Highlights</h3>
+            <p>Built in Unity for Windows, the game revolves around a rising stress bar that reacts dynamically to every player action — completing tasks increases it, customer interruptions spike it, and relief mechanics like coffee breaks or phone use temporarily bring it down. Each workday is structured around UI-based mini-games that simulate repetitive work tasks under escalating time pressure. The manager system runs independently, triggering interruptions at set thresholds to layer difficulty without relying on randomness alone. Stress management becomes the core loop, forcing the player to constantly weigh task completion against sanity.</p>
+          </div>
+        </div>
+        <div>
+          <div class="meta-box"><h4>Platform</h4><p>PC (Windows)</p></div>
+          <div class="meta-box"><h4>Engine</h4><p>Unity</p></div>
+          <div class="meta-box"><h4>Languages</h4><p>C#</p></div>
+          <div class="meta-box"><h4>Genre</h4><p>Comedy Simulation</p></div>
+          <a class="btn-secondary" href="https://fesalalsubie.itch.io/let-me-work-in-peace"
+             style="width:100%;justify-content:center;margin-top:0.5rem;" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Play on itch.io
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════ CONTACT ══════ -->
+<div id="contact" class="page">
+  <section>
+    <div class="section-label">// contact</div>
+    <div class="contact-grid">
+      <div>
+        <h2 class="section-title">Let's build<br>something.</h2>
+        <div class="divider"></div>
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:2rem;">Whether it's a game project, software collaboration, or just want to say hello — my inbox is open.</p>
+        <div class="contact-links">
+          <a class="contact-link" href="mailto:Fesalm67@gmail.com">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </div>
+            <div>
+              <span class="contact-link-label">Email</span>
+              <span class="contact-link-value">Fesalm67@gmail.com</span>
+            </div>
+          </a>
+          <a class="contact-link" href="https://github.com/FesalAlsubie" target="_blank">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.412-4.041-1.412-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div>
+              <span class="contact-link-label">GitHub</span>
+              <span class="contact-link-value">github.com/FesalAlsubie</span>
+            </div>
+          </a>
+          <a class="contact-link" href="https://www.linkedin.com/in/fesal-alsubie" target="_blank">
+            <div class="contact-link-icon">
+              <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </div>
+            <div>
+              <span class="contact-link-label">LinkedIn</span>
+              <span class="contact-link-value">linkedin.com/in/fesal-alsubie</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="fade-in">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--primary);margin-bottom:1.5rem;">// send a message</div>
+        <div class="contact-form">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input class="form-input" type="text" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" placeholder="your@email.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" placeholder="Tell me about your project..."></textarea>
+          </div>
+          <button class="btn-primary" style="align-self:flex-start;" onclick="handleSend(this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left"><strong>Faisal Alsubie</strong> &middot; Built with care &middot; &copy; 2026</div>
+  <div class="footer-right">
+    <div class="footer-nav">
+      <a href="#" onclick="navigate('home')">Home</a>
+      <a href="#" onclick="navigate('about')">About</a>
+      <a href="#" onclick="navigate('projects')">Projects</a>
+      <a href="#" onclick="navigate('contact')">Contact</a>
+    </div>
+    <button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8593;</button>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  function animateCursor(){
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a,button,[onclick]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.borderColor='var(--primary)';});
+    el.addEventListener('mouseleave',()=>{ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.borderColor='rgba(32,211,238,0.25)';});
+  });
+
+  // NAVIGATION
+  function navigate(page){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('[data-page]').forEach(a=>a.classList.remove('active'));
+    document.getElementById('project-detail').style.display='none';
+    document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
+    if(['home','about','projects','contact'].includes(page)){
+      const el=document.getElementById(page);
+      el.classList.add('active','page-transition');
+      setTimeout(()=>el.classList.remove('page-transition'),400);
+      const lnk=document.querySelector('[data-page="'+page+'"]');
+      if(lnk) lnk.classList.add('active');
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+    observeFadeIns();
+    return false;
+  }
+
+  function openProject(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const det=document.getElementById('project-detail');
+    det.style.display='block'; det.classList.add('active');
+    document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
+    document.getElementById('detail-'+id).style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function toggleMenu(){
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  function observeFadeIns(){
+    const els=document.querySelectorAll('.fade-in:not(.visible)');
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach((e,i)=>{
+        if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*120);obs.unobserve(e.target);}
+      });
+    },{threshold:0.1});
+    els.forEach(el=>obs.observe(el));
+  }
+  document.addEventListener('DOMContentLoaded',observeFadeIns);
+  setTimeout(observeFadeIns,100);
+
+  function handleSend(btn){
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Sent!';
+    btn.style.background='#1a9e5c';
+    setTimeout(()=>{
+      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
+      btn.style.background='var(--primary)';
+    },3000);
+  }
+</script>
+</body>
+</html>
