@@ -102,8 +102,88 @@
   .project-link:hover { gap: 10px; }
   #project-detail { display: none; }
   #project-detail.active { display: block; }
-  .detail-hero { height: 380px; position: relative; overflow: hidden; }
-  .detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 30%,var(--bg) 100%); }
+
+  /* ── VIDEO HERO ── */
+  .detail-hero {
+    position: relative;
+    width: 100%;
+    /* ~35% of viewport height — comfortable but not overwhelming */
+    padding-top: 38%;
+    overflow: hidden;
+    background: #000;
+  }
+  .detail-hero iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 1;
+  }
+  .detail-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── GAMEPLAY VIDEO SECTION ── */
+  .gameplay-section {
+    margin-bottom: 2.5rem;
+  }
+  .gameplay-section h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    background: #000;
+    box-shadow: 0 0 40px rgba(32,211,238,0.08);
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  /* Scan-line overlay for style */
+  .video-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.04) 3px,
+      rgba(0,0,0,0.04) 4px
+    );
+    z-index: 2;
+    border-radius: 4px;
+  }
+  .video-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-top: 0.75rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
   .detail-content { max-width: 860px; margin: 0 auto; padding: 3rem 5vw 6rem; }
   .detail-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: none; border: none; background: none; margin-bottom: 2.5rem; transition: color 0.2s; padding: 0; }
   .detail-back:hover { color: var(--primary); }
@@ -162,6 +242,7 @@
     .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
     .exp-dot { display: none; }
     section { padding: 70px 5vw; }
+    /* hero uses padding-top aspect ratio — no height override needed */
   }
 </style>
 </head>
@@ -222,8 +303,6 @@
       </div>
     </div>
     <div class="hero-scroll">scroll</div>
- </div>
-    </div>
   </section>
 </div>
 
@@ -387,34 +466,56 @@
 
   <!-- SHEHERAZADE DETAIL -->
   <div id="detail-sheherazade" class="detail-page" style="display:none;">
-    <div class="detail-hero" style="background:#1a0a2e;">
-      <img src="https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png"
-           alt="Sheherazade: Last Tale, One More Night"
-           style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.75;" />
+
+    <!-- VIDEO HERO — autoplay muted for ambient feel -->
+    <div class="detail-hero">
+      <iframe
+        src="https://drive.google.com/file/d/11Xil39br6Fm64OwgP_6ACWDgoerfCAvU/preview"
+        allow="autoplay"
+        allowfullscreen
+        title="Sheherazade gameplay video">
+      </iframe>
       <div class="detail-hero-overlay"></div>
     </div>
+
     <div class="detail-content">
       <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
-      <div class="section-label">// visual novel · 2024</div>
+      <div class="section-label">// visual novel · 2026</div>
       <h1 class="detail-title">Sheherazade: Last Tale,<br>One More Night</h1>
       <div class="detail-subtitle">A narrative inversion of the 1001 Nights</div>
       <div class="detail-tags">
         <span class="tag">Visual Novel</span><span class="tag">Unity</span>
         <span class="tag">C#</span><span class="tag">Narrative Design</span><span class="tag">2D Art</span>
       </div>
+
       <div class="detail-grid">
         <div>
           <div class="detail-section">
             <h3>About the Game</h3>
             <p>Sheherazade: Last Tale, One More Night is a narrative-driven visual novel that takes the iconic 1001 Nights story and flips the dynamic entirely. In this version, the king is the storyteller and Sheherazade sits in judgment — deciding whether each tale is worthy of her mercy or condemnation.</p>
             <br>
-            <p>Each night presents a new tale as the king, and it must be an interesting teal or you die .</p>
+            <p>Each night presents a new tale as the king, and it must be an interesting tale or you die.</p>
           </div>
+
+          <!-- ── GAMEPLAY VIDEO (full section) ── -->
+          <div class="gameplay-section">
+            <h3>Gameplay</h3>
+            <div class="video-wrapper">
+              <iframe
+                src="https://drive.google.com/file/d/11Xil39br6Fm64OwgP_6ACWDgoerfCAvU/preview"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                title="Sheherazade gameplay footage">
+              </iframe>
+            </div>
+            <p class="video-caption">// gameplay footage — sheherazade: last tale, one more night</p>
+          </div>
+
           <div class="detail-section">
             <h3>My Role</h3>
             <ul>
               <li>Lead Developer &amp; Designer</li>
-              <li>branching dialogue system</li>
+              <li>Branching dialogue system</li>
               <li>Unity implementation of the visual novel engine</li>
               <li>Custom scene transition system</li>
               <li>Audio implementation</li>
@@ -445,21 +546,28 @@
 
   <!-- LET ME WORK IN PEACE DETAIL -->
   <div id="detail-letmework" class="detail-page" style="display:none;">
-    <div class="detail-hero" style="background:#0a1a10;">
-      <img src="https://img.itch.zone/aW1nLzI1NTAwMjMzLnBuZw==/original/pUv%2FF2.png"
-           alt="LET ME WORK IN PEACE"
-           style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.75;" />
+
+    <!-- VIDEO HERO -->
+    <div class="detail-hero">
+      <iframe
+        src="https://drive.google.com/file/d/1kCt1rSUnfi7wHA4UNK37YxIOEYxjn-6P/preview"
+        allow="autoplay"
+        allowfullscreen
+        title="LET ME WORK IN PEACE gameplay video">
+      </iframe>
       <div class="detail-hero-overlay"></div>
     </div>
+
     <div class="detail-content">
       <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
-      <div class="section-label">// comedy game · 2024</div>
+      <div class="section-label">// comedy game · 2026</div>
       <h1 class="detail-title">LET ME WORK<br>IN PEACE</h1>
       <div class="detail-subtitle">A customer service survival simulator</div>
       <div class="detail-tags">
         <span class="tag">Comedy</span><span class="tag">Unity</span>
         <span class="tag">C#</span><span class="tag">Game Jam</span><span class="tag">Simulation</span>
       </div>
+
       <div class="detail-grid">
         <div>
           <div class="detail-section">
@@ -468,6 +576,21 @@
             <br>
             <p>Inspired by real-life workplace chaos, the game layers absurd requests, escalating difficulty, and dark humor into a surprisingly stressful yet cathartic experience. The joke is the gameplay loop.</p>
           </div>
+
+          <!-- ── GAMEPLAY VIDEO (full section) ── -->
+          <div class="gameplay-section">
+            <h3>Gameplay</h3>
+            <div class="video-wrapper">
+              <iframe
+                src="https://drive.google.com/file/d/1kCt1rSUnfi7wHA4UNK37YxIOEYxjn-6P/preview"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                title="LET ME WORK IN PEACE gameplay footage">
+              </iframe>
+            </div>
+            <p class="video-caption">// gameplay footage — let me work in peace</p>
+          </div>
+
           <div class="detail-section">
             <h3>My Role</h3>
             <ul>
@@ -478,7 +601,7 @@
           </div>
           <div class="detail-section">
             <h3>Technical Highlights</h3>
-            <p>Built in Unity for Windows, the game revolves around a rising stress bar that reacts dynamically to every player action — completing tasks increases it, customer interruptions spike it, and relief mechanics like coffee breaks or phone use temporarily bring it down. Each workday is structured around UI-based mini-games that simulate repetitive work tasks under escalating time pressure. The manager system runs independently, triggering interruptions at set thresholds to layer difficulty without relying on randomness alone. Stress management becomes the core loop, forcing the player to constantly weigh task completion against sanity.</p>
+            <p>Built in Unity for Windows, the game revolves around a rising stress bar that reacts dynamically to every player action — completing tasks increases it, customer interruptions spike it, and relief mechanics like coffee breaks or phone use temporarily bring it down. Each workday is structured around UI-based mini-games that simulate repetitive work tasks under escalating time pressure. The manager system runs independently, triggering interruptions at set thresholds to layer difficulty without relying on randomness alone.</p>
           </div>
         </div>
         <div>
