@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Heritage Keeper — Case Study — Faisal Rajeh Alsubie</title>
+  <meta name="description" content="Heritage Keeper — first-person puzzle adventure. Case study by Faisal Rajeh Alsubie covering architecture, challenges, gameplay, and roadmap." />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+</head>
+<body class="theme-dark">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../">Faisal Rajeh Alsubie</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="../#projects">Back to Projects</a></li>
+          <li><a href="../gameplay-systems.html">Gameplay Systems</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" class="container case-study">
+    <article class="case-hero glass">
+      <div class="case-intro">
+        <h1>Heritage Keeper</h1>
+        <p class="muted">Flagship Project • Role: Gameplay Programmer • Engine: Unity 6</p>
+        <p class="lead">A first-person puzzle adventure blending environmental storytelling and educational content about Arabian heritage.</p>
+        <div class="case-meta">
+          <div><strong>Genre</strong> Puzzle Adventure</div>
+          <div><strong>Role</strong> Gameplay Programmer</div>
+          <div><strong>Language</strong> C#</div>
+        </div>
+      </div>
+
+      <div class="case-media" aria-hidden="true">
+        <img src="../assets/images/project-heritage-1.jpg" alt="Heritage Keeper screenshot" />
+      </div>
+    </article>
+
+    <section class="case-section">
+      <h2>Overview</h2>
+      <p>Heritage Keeper invites players to explore ancient chambers and decode forgotten scripts. Educational content is woven into puzzles and environment to create a learning-through-play loop.</p>
+    </section>
+
+    <section class="case-section">
+      <h2>My Role</h2>
+      <ul>
+        <li>Player controller and input integration</li>
+        <li>Puzzle framework (event-driven, modular)</li>
+        <li>Lantern mechanic and lighting integration</li>
+        <li>Audio manager and camera shake/effects</li>
+        <li>System architecture and code reviews</li>
+      </ul>
+    </section>
+
+    <section class="case-section">
+      <h2>Gameplay</h2>
+      <p>Players navigate, interact with artifacts, solve cipher puzzles, and use a lantern to reveal hidden glyphs. Difficulty scales through puzzle composition and environmental clues.</p>
+      <ul>
+        <li>Puzzle flow with states (idle, engaged, solved)</li>
+        <li>Contextual input prompts and accessible interactions</li>
+        <li>Save points with progress serialization</li>
+      </ul>
+    </section>
+
+    <section class="case-section">
+      <h2>Technical Challenges</h2>
+      <ol>
+        <li>Creating a modular puzzle system to support many puzzle types while keeping low coupling.</li>
+        <li>Optimizing the lantern and lighting (mobile considerations) while preserving atmosphere.</li>
+        <li>Implementing save/load for nested puzzle states.</li>
+      </ol>
+    </section>
+
+    <section class="case-section">
+      <h2>Architecture</h2>
+      <p>Key subsystems:</p>
+      <ul>
+        <li><strong>Core:</strong> GameManager, EventBus, SaveManager</li>
+        <li><strong>Puzzle Framework:</strong> IPuzzle interface, PuzzleController, PuzzleFactory</li>
+        <li><strong>Audio:</strong> AudioManager with SFX pooling and layered music tracks</li>
+        <li><strong>Input:</strong> Unity Input System abstraction for mapping</li>
+      </ul>
+      <pre><code>// Sample architecture sketch (C# pseudocode)
+public interface IPuzzle {
+  void Initialize();
+  void Engage();
+  bool IsSolved { get; }
+}
+      </code></pre>
+    </section>
+
+    <section class="case-section">
+      <h2>Educational Vision</h2>
+      <p>Puzzles teach through discovery; narrative nodes give language history context. Designers and educators collaborated to ensure accuracy and accessibility.</p>
+    </section>
+
+    <section class="case-section">
+      <h2>Lessons Learned</h2>
+      <ul>
+        <li>Favor data-driven puzzle definitions to iterate with designers quickly.</li>
+        <li>Profiling lantern shaders early helped avoid mobile bottlenecks.</li>
+        <li>Playtesting revealed the need for progressive hint systems.</li>
+      </ul>
+    </section>
+
+    <section class="case-section">
+      <h2>Gallery</h2>
+      <div class="gallery-grid">
+        <img src="../assets/images/project-heritage-1.jpg" alt="Screenshot 1" />
+        <img src="../assets/images/project-heritage-2.jpg" alt="Screenshot 2" />
+      </div>
+    </section>
+
+    <section class="case-section">
+      <h2>Future Roadmap</h2>
+      <ul>
+        <li>Expand cipher system with procedurally generated puzzles</li>
+        <li>Localization and accessibility improvements</li>
+        <li>Mobile performance and adaptive visuals</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="../">Back to portfolio</a> • <a href="../README.md">Readme</a>
+    </div>
+  </footer>
+
+  <script src="../js/navigation.js" defer></script>
+  <script src="../js/animations.js" defer></script>
+</body>
+</html>

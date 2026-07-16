@@ -1,0 +1,24 @@
+/* responsive.css
+   Additional breakpoints and responsive tweaks
+*/
+@media (max-width:719px){
+  .header-inner{gap:.5rem}
+  .main-nav{display:none}
+  #nav-toggle{display:inline-flex}
+  .portrait-glass{min-height:220px}
+  .featured-media img{max-width:100%;width:100%}
+  .grid{grid-template-columns:1fr}
+  .systems-grid{grid-template-columns:1fr 1fr}
+}
+
+@media (min-width:720px){
+  .nav-toggle{display:none}
+  #mobile-menu{display:none !important}
+  .hero-grid{align-items:center}
+}
+
+/* ultrawide layout */
+@media (min-width:1600px){
+  .container{max-width:1400px}
+  .featured-media img{width:560px}
+}

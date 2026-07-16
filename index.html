@@ -21,6 +21,9 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; cursor: none; }
+  body.lightbox-active { cursor: auto; }
+  body.lightbox-active #cursor,
+  body.lightbox-active #cursor-ring { display: none !important; }
   #cursor { position: fixed; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s, background 0.2s; mix-blend-mode: screen; }
   #cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid var(--primary-border); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; }
   body::before { content: ''; position: fixed; inset: 0; z-index: 9990; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px; }
@@ -38,7 +41,8 @@
   .mobile-menu a:hover { color: var(--primary); }
   .page { display: none; padding-top: 64px; min-height: 100vh; }
   .page.active { display: block; }
-  #home { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 80px 5vw 60px; }
+  #home { position: relative; overflow: hidden; min-height: 100vh; padding: 80px 5vw 60px; }
+  #home.active { display: flex; align-items: center; justify-content: center; }
   .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(32,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(32,211,238,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at 50% 50%, black 40%, transparent 75%); }
   .hero-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(32,211,238,0.07) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
   .hero-content { position: relative; z-index: 2; max-width: 900px; width: 100%; }
@@ -69,6 +73,14 @@
   .about-text p strong { color: var(--text); }
   .about-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2rem; }
   .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 2px; border: 1px solid var(--primary-border); background: var(--primary-dim); color: var(--primary); }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 2rem 0; }
+  .stat-box { flex: 1; min-width: 110px; background: var(--card); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.25rem 1rem; text-align: center; }
+  .stat-num { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .stats-row { display: flex; gap: 1.5rem; margin-top: 2rem; flex-wrap: wrap; }
+  .stat-box { display: flex; flex-direction: column; gap: 2px; padding: 12px 18px; background: var(--bg2); border: 1px solid var(--card-border); border-radius: 4px; }
+  .stat-num { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; color: var(--primary); line-height: 1; }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .skills-col h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--card-border); }
   .skill-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
   .skill-name { font-size: 0.9rem; color: var(--text); }
@@ -127,6 +139,45 @@
     z-index: 2;
     pointer-events: none;
   }
+  .detail-hero-static {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 40%, rgba(32,211,238,0.08) 0%, transparent 70%), var(--bg2);
+    background-size: cover;
+  }
+  .detail-hero-static svg { position: relative; z-index: 1; opacity: 0.9; }
+  .placeholder-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: var(--bg2);
+    border: 1px dashed var(--card-border);
+    border-radius: 4px;
+    padding: 0.9rem 1.1rem;
+    margin-top: 0.75rem;
+    line-height: 1.6;
+  }
+  .placeholder-note strong { color: var(--primary); }
+
+  /* ── SCREENSHOT GALLERY ── */
+  .screenshot-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 10px; margin-top: 0.5rem; }
+  .screenshot-thumb { position: relative; aspect-ratio: 16/10; border-radius: 4px; overflow: hidden; border: 1px solid var(--card-border); cursor: none; background: var(--bg3); transition: border-color 0.2s, transform 0.2s; }
+  .screenshot-thumb:hover { border-color: var(--primary-border); transform: translateY(-3px); }
+  .screenshot-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .screenshot-thumb.placeholder { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; border-style: dashed; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-align: center; padding: 8px; cursor: default; }
+  .screenshot-thumb.placeholder:hover { transform: none; border-color: var(--card-border); }
+  .screenshot-thumb.placeholder svg { opacity: 0.6; }
+
+  #lightbox { position: fixed; inset: 0; background: rgba(5,10,11,0.94); z-index: 10050; display: none; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+  #lightbox.active { display: flex; }
+  #lightbox img { max-width: 88vw; max-height: 80vh; border-radius: 4px; border: 1px solid var(--card-border); box-shadow: 0 0 60px rgba(32,211,238,0.15); }
+  .lightbox-close, .lightbox-nav { position: absolute; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 2px; border: 1px solid var(--card-border); background: rgba(15,29,32,0.8); color: var(--text); cursor: none; transition: all 0.2s; }
+  .lightbox-close:hover, .lightbox-nav:hover { border-color: var(--primary); color: var(--primary); }
+  .lightbox-close { top: 24px; right: 24px; }
+  .lightbox-nav.prev { left: 24px; top: 50%; transform: translateY(-50%); }
+  .lightbox-nav.next { right: 24px; top: 50%; transform: translateY(-50%); }
+  .lightbox-caption { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
 
   /* ── GAMEPLAY VIDEO SECTION ── */
   .gameplay-section {
@@ -184,22 +235,22 @@
     text-transform: uppercase;
   }
 
-  .detail-content { max-width: 860px; margin: 0 auto; padding: 3rem 5vw 6rem; }
-  .detail-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: none; border: none; background: none; margin-bottom: 2.5rem; transition: color 0.2s; padding: 0; }
+  .detail-content { max-width: 1140px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+  .detail-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: none; border: none; background: none; margin-bottom: 2.5rem; transition: color 0.2s; padding: 0; }
   .detail-back:hover { color: var(--primary); }
-  .detail-title { font-size: clamp(2rem,5vw,3.5rem); font-weight: 800; margin-bottom: 0.5rem; }
-  .detail-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--primary); margin-bottom: 2rem; }
-  .detail-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 3rem; }
-  .detail-grid { display: grid; grid-template-columns: 1fr 300px; gap: 4rem; }
+  .detail-title { font-size: clamp(2.5rem,5vw,3.75rem); font-weight: 800; margin-bottom: 0.5rem; }
+  .detail-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--primary); margin-bottom: 2rem; }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 3rem; }
+  .detail-grid { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(280px,360px); gap: 4rem; align-items: start; }
   .detail-section { margin-bottom: 2.5rem; }
-  .detail-section h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
-  .detail-section p { color: #7fa8b0; line-height: 1.8; font-size: 0.95rem; }
-  .detail-section ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  .detail-section ul li { display: flex; align-items: center; gap: 8px; color: #7fa8b0; font-size: 0.9rem; }
-  .detail-section ul li::before { content: '›'; color: var(--primary); font-size: 1.1rem; }
-  .meta-box { background: var(--bg2); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem; }
-  .meta-box h4 { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem; }
-  .meta-box p { color: #7fa8b0; font-size: 0.88rem; }
+  .detail-section h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem; }
+  .detail-section p { color: #7fa8b0; line-height: 1.85; font-size: 1rem; }
+  .detail-section ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .detail-section ul li { display: flex; align-items: center; gap: 10px; color: #7fa8b0; font-size: 1rem; }
+  .detail-section ul li::before { content: '›'; color: var(--primary); font-size: 1.2rem; }
+  .meta-box { background: var(--bg2); border: 1px solid var(--card-border); border-radius: 4px; padding: 1.75rem; margin-bottom: 1.5rem; }
+  .meta-box h4 { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.85rem; }
+  .meta-box p { color: #7fa8b0; font-size: 1rem; line-height: 1.7; }
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; max-width: 1000px; margin: 0 auto; align-items: start; }
   .contact-links { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
   .contact-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--card); border: 1px solid var(--card-border); border-radius: 4px; text-decoration: none; transition: all 0.2s; cursor: none; }
@@ -233,6 +284,24 @@
   @keyframes glitch2 { 0%,100% { opacity:0; } 20%,80% { opacity:0.5; } }
   .page-transition { animation: pageIn 0.35s ease; }
   @keyframes pageIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── NAVIGATION LOADING FEEDBACK ── */
+  #load-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2.5px;
+    width: 0%;
+    background: var(--primary);
+    box-shadow: 0 0 8px var(--primary), 0 0 2px var(--primary);
+    z-index: 10000;
+    transition: width 0.22s cubic-bezier(.4,0,.2,1), opacity 0.2s ease;
+    opacity: 0;
+  }
+  #load-bar.loading { opacity: 1; width: 85%; }
+  #load-bar.done { opacity: 1; width: 100%; }
+  @media (max-width:1024px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width:768px) {
     .nav-links { display: none; }
     .hamburger { display: flex; }
@@ -250,6 +319,7 @@
 
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
+<div id="load-bar"></div>
 
 <!-- NAV -->
 <nav>
@@ -285,8 +355,8 @@
     <div class="hero-content">
       <div class="hero-tag"><span class="dot"></span> Available for new projects</div>
       <h1 class="hero-name glitch" data-text="Faisal Alsubie">Faisal Alsubie</h1>
-      <p class="hero-role">Computer Science Graduate <span class="accent">—</span> Game Developer <span class="accent">&amp;</span> Software Engineer</p>
-      <p class="hero-bio">Crafting immersive experiences through code and gameplay. Specialized in building interactive worlds, high-performance software, and bringing stories to life through games.</p>
+      <p class="hero-role">Gameplay Programmer <span class="accent">—</span> Computer Science Graduate <span class="accent">—</span> Game Developer <span class="accent">&amp;</span> Software Engineer</p><span
+      <p class="hero-bio">Building memorable gameplay experiences through creative systems and thoughtful design.</p>
       <div class="hero-ctas">
         <a class="btn-primary" href="#" onclick="navigate('projects')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -314,15 +384,21 @@
       <div class="about-text fade-in">
         <h2 class="section-title">Building worlds,<br>one line at a time.</h2>
         <div class="divider"></div>
-        <p>Hi, I'm <strong>Faisal Alsubie</strong> — a Computer Science graduate with a passion for game development and interactive storytelling. I bridge the gap between technical precision and creative vision.</p>
-        <p>From building AI-driven systems to crafting narrative experiences, I bring the same intensity to every project. I led The Game Hub student community, organized events, and helped foster a culture of creativity.</p>
-        <p>When I'm not writing C# or Blueprints, I'm exploring how stories, systems, and mechanics can come together to create something truly memorable.</p>
+        <p>I'm <strong>Faisal Alsubie</strong> a Computer Science graduate and Gameplay Programmer passionate about creating games that combine engaging mechanics with meaningful experiences.</p>
+        <p>I specialize in Unity (C#) and Unreal Engine, with experience developing gameplay systems, UI, rapid prototypes, and interactive mechanics through bootcamps, game jams, and personal projects.</p>
+        <p>Beyond development, I serve as President of <strong>The Game Hub</strong>, a Saudi Digital Academy-backed community where I organize workshops, game jams, and educational initiatives to support aspiring game developers.</p>
+        <p>I'm particularly interested in gameplay programming, systems design, and using Saudi culture and history as inspiration for unique interactive experiences. Whether I'm designing mechanics, writing gameplay code, or prototyping new ideas, I enjoy turning concepts into polished, playable experiences.</p>
         <div class="about-badges">
           <span class="badge">Unity</span><span class="badge">Unreal Engine 5</span>
           <span class="badge">C#</span><span class="badge">C++</span>
           <span class="badge">Java</span><span class="badge">Python</span>
           <span class="badge">Flutter</span><span class="badge">Game Design</span>
-          <span class="badge">Narrative Design</span>
+          <span class="badge">Narrative Design</span><span class="badge">Heritage Games</span>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box"><span class="stat-num">500+</span><span class="stat-label">Community Members</span></div>
+          <div class="stat-box"><span class="stat-num">22</span><span class="stat-label">Workshops Run</span></div>
+          <div class="stat-box"><span class="stat-num">3</span><span class="stat-label">University Partnerships</span></div>
         </div>
       </div>
       <div class="fade-in" style="animation-delay:0.15s">
@@ -340,6 +416,7 @@
             <div class="skill-item"><span class="skill-name">Unity Engine</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.7s"></div></div></div>
             <div class="skill-item"><span class="skill-name">Unreal Engine 5</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.8s"></div></div></div>
             <div class="skill-item"><span class="skill-name">Game Design</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.9s"></div></div></div>
+            <div class="skill-item"><span class="skill-name">Shader Graph</span><div class="skill-bar"><div class="skill-fill" style="animation-delay:0.95s"></div></div></div>
           </div>
           <div class="skills-col" style="margin-top:1.5rem;">
             <h3>Other Skills</h3>
@@ -362,7 +439,7 @@
           <div class="exp-dot"></div>
           <div class="exp-role">Volunteering as the President of The Game Hub</div>
           <div class="exp-company">Student Community · SDA | Saudi Digital Academy |</div>
-          <div class="exp-desc">Led and grew a student game development community. Organized game jams, workshops, and events. Mentored junior members and built a collaborative creative environment for aspiring developers.</div>
+          <div class="exp-desc">Lead a 500+ member student game development community affiliated with the Saudi Digital Academy. Ran 22 workshops, built 3 university partnerships, and organized game jams and events. Recently led the community's pitch preparation for the Misk Foundation's Incubator Program evaluation committee. Mentored junior members and built a collaborative creative environment for aspiring developers.</div>
         </div>
       </div>
       <div class="exp-item">
@@ -398,24 +475,64 @@
     </div>
     <div class="projects-grid">
 
-      <!-- Sheherazade -->
-      <div class="project-card" onclick="openProject('sheherazade')">
+      <!-- Heritage Keeper -->
+      <div class="project-card" onclick="openProject('heritagekeeper')">
         <div class="project-thumb">
-          <div class="project-thumb-inner" style="padding:0;overflow:hidden;background:#1a0a2e;">
-            <img src="https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png"
-                 alt="Sheherazade: Last Tale, One More Night"
+          <div class="project-thumb-inner" style="background:linear-gradient(160deg,#1a2e1f 0%,#0f1d20 100%);">
+           <img src="assets/images/TheHeritageKeeperLogo.png"
+                 alt="Heritage Keeper"
                  style="width:100%;height:100%;object-fit:cover;display:block;" />
           </div>
           <div class="project-thumb-overlay"></div>
           <div class="project-tags">
-            <span class="tag">Visual Novel</span>
+            <span class="tag">Puzzle Adventure</span>
             <span class="tag">Unity</span>
             <span class="tag">C#</span>
           </div>
         </div>
         <div class="project-body">
-          <div class="project-title">Sheherazade: Last Tale, One More Night</div>
-          <div class="project-desc">A visual novel inspired by 1001 Nights with a narrative twist — the king tells the stories, and Sheherazade becomes the judge.</div>
+          <div class="project-title">Heritage Keeper</div>
+          <div class="project-desc">A first-person cave puzzle adventure built around authentic Thamudic petroglyphs, cipher puzzles, and a rising void mechanic.</div>
+          <span class="project-link">View Project <span class="arrow">→</span></span>
+        </div>
+      </div>
+
+      <!-- Spider Ball -->
+      <div class="project-card" onclick="openProject('spiderball')">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="background:linear-gradient(160deg,#241a2e 0%,#0f1d20 100%);">
+            <img src="assets/images/SpiderBall4.png" alt="Spider Ball" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags">
+            <span class="tag">Bootcamp Project</span>
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">Spider Ball</div>
+          <div class="project-desc">A physics-driven bootcamp project, polished and presented alongside Heritage Keeper.</div>
+          <span class="project-link">View Project <span class="arrow">→</span></span>
+        </div>
+      </div>
+
+      <!-- 0 Days Since Last Accident -->
+      <div class="project-card" onclick="openProject('zerodays')">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="background:linear-gradient(160deg,#2e1a1a 0%,#0f1d20 100%);">
+            <img src="assets/images/0Days1.png" alt="0 Days Since Last Accident" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags">
+            <span class="tag">Endless Runner</span>
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">0 Days Since Last Accident</div>
+          <div class="project-desc">A fast-paced 3D endless runner built during the Unity bootcamp, published on itch.io.</div>
           <span class="project-link">View Project <span class="arrow">→</span></span>
         </div>
       </div>
@@ -438,6 +555,28 @@
         <div class="project-body">
           <div class="project-title">LET ME WORK IN PEACE</div>
           <div class="project-desc">A chaotic comedy game simulating the absolute mayhem of working in customer service — because someone had to.</div>
+          <span class="project-link">View Project <span class="arrow">→</span></span>
+        </div>
+      </div>
+
+      <!-- Sheherazade -->
+      <div class="project-card" onclick="openProject('sheherazade')">
+        <div class="project-thumb">
+          <div class="project-thumb-inner" style="padding:0;overflow:hidden;background:#1a0a2e;">
+            <img src="https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png"
+                 alt="Sheherazade: Last Tale, One More Night"
+                 style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+          <div class="project-thumb-overlay"></div>
+          <div class="project-tags">
+            <span class="tag">Visual Novel</span>
+            <span class="tag">Unity</span>
+            <span class="tag">C#</span>
+          </div>
+        </div>
+        <div class="project-body">
+          <div class="project-title">Sheherazade: Last Tale, One More Night</div>
+          <div class="project-desc">A visual novel inspired by 1001 Nights with a narrative twist — the king tells the stories, and Sheherazade becomes the judge.</div>
           <span class="project-link">View Project <span class="arrow">→</span></span>
         </div>
       </div>
@@ -496,21 +635,6 @@
             <br>
             <p>Each night presents a new tale as the king, and it must be an interesting tale or you die.</p>
           </div>
-
-          <!-- ── GAMEPLAY VIDEO (full section) ── -->
-          <div class="gameplay-section">
-            <h3>Gameplay</h3>
-            <div class="video-wrapper">
-              <iframe
-                src="https://drive.google.com/file/d/11Xil39br6Fm64OwgP_6ACWDgoerfCAvU/preview"
-                allow="autoplay; fullscreen"
-                allowfullscreen
-                title="Sheherazade gameplay footage">
-              </iframe>
-            </div>
-            <p class="video-caption">// gameplay footage — sheherazade: last tale, one more night</p>
-          </div>
-
           <div class="detail-section">
             <h3>My Role</h3>
             <ul>
@@ -539,7 +663,25 @@
             </svg>
             Play on itch.io
           </a>
+          <div class="meta-box">
+            <h4>Screenshots</h4>
+            <div class="screenshot-grid" id="gallery-sheherazade"></div>
+          </div>
         </div>
+      </div>
+
+      <!-- ── GAMEPLAY VIDEO (full-width) ── -->
+      <div class="gameplay-section">
+        <h3>Gameplay</h3>
+        <div class="video-wrapper">
+          <iframe
+            src="https://drive.google.com/file/d/11Xil39br6Fm64OwgP_6ACWDgoerfCAvU/preview"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            title="Sheherazade gameplay footage">
+          </iframe>
+        </div>
+        <p class="video-caption">// gameplay footage — sheherazade: last tale, one more night</p>
       </div>
     </div>
   </div>
@@ -576,21 +718,6 @@
             <br>
             <p>Inspired by real-life workplace chaos, the game layers absurd requests, escalating difficulty, and dark humor into a surprisingly stressful yet cathartic experience. The joke is the gameplay loop.</p>
           </div>
-
-          <!-- ── GAMEPLAY VIDEO (full section) ── -->
-          <div class="gameplay-section">
-            <h3>Gameplay</h3>
-            <div class="video-wrapper">
-              <iframe
-                src="https://drive.google.com/file/d/1kCt1rSUnfi7wHA4UNK37YxIOEYxjn-6P/preview"
-                allow="autoplay; fullscreen"
-                allowfullscreen
-                title="LET ME WORK IN PEACE gameplay footage">
-              </iframe>
-            </div>
-            <p class="video-caption">// gameplay footage — let me work in peace</p>
-          </div>
-
           <div class="detail-section">
             <h3>My Role</h3>
             <ul>
@@ -617,6 +744,223 @@
             </svg>
             Play on itch.io
           </a>
+          <div class="meta-box">
+            <h4>Screenshots</h4>
+            <div class="screenshot-grid" id="gallery-letmework"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERITAGE KEEPER DETAIL -->
+  <div id="detail-heritagekeeper" class="detail-page" style="display:none;">
+
+    <!-- VIDEO HERO -->
+    <div class="detail-hero">
+      <iframe
+        src="https://drive.google.com/file/d/1d_eZxcdmD_8tOrD3W439J7L8KYmeNDrN/preview"
+        allow="autoplay"
+        allowfullscreen
+        title="Heritage Keeper gameplay video">
+      </iframe>
+      <div class="detail-hero-overlay"></div>
+    </div>
+
+    <div class="detail-content">
+      <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
+      <div class="section-label">// puzzle adventure · 2026</div>
+      <h1 class="detail-title">Heritage Keeper</h1>
+      <div class="detail-subtitle">A cave puzzle adventure inspired by Thamudic petroglyphs</div>
+      <div class="detail-tags">
+        <span class="tag">Unity</span><span class="tag">C#</span>
+        <span class="tag">Puzzle</span><span class="tag">Heritage</span><span class="tag">First-Person</span>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h3>About the Game</h3>
+            <p>Heritage Keeper is a solo-developed first-person puzzle adventure inspired by Saudi Arabia's rich cultural heritage. Created as the capstone project for a Unity bootcamp, players explore five interconnected cave chambers while solving puzzles based on authentic Thamudic symbols.</p>
+            <br>
+            <p>Equipped with a magical lantern that serves as both a light source and puzzle-solving tool, players must decipher ancient inscriptions while escaping a mysterious void that relentlessly consumes the cave behind them.</p>
+          </div>
+          <div class="detail-section">
+            <h3>My Role</h3>
+            <p><strong>Solo Developer</strong>,</p>
+            <ul>
+              <li>Gameplay Programming</li>
+              <li>Game Design</li>
+              <li>Puzzle Design</li>
+              <li>Level Design</li>
+              <li>UI Implementation</li>
+              <li>Audio Integration</li>
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h3>Technical Highlights</h3>
+             <ul>
+              <li>Designed a modular cipher puzzle system based on authentic Thamudic symbols.</li>
+              <li>Developed a multi-purpose magic lantern mechanic used for navigation and puzzle-solving.</li>
+              <li>Created a dynamic rising void system that continuously increases gameplay tension.</li>
+              <li>Built custom visual effects using Unity Shader Graph.</li>
+              <li>Designed and implemented all gameplay systems, levels, and interactions.</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="meta-box"><h4>Platform</h4><p>PC (Windows)</p></div>
+          <div class="meta-box"><h4>Engine</h4><p>Unity</p></div>
+          <div class="meta-box"><h4>Languages</h4><p>C#</p></div>
+          <div class="meta-box"><h4>Context</h4><p>Unity bootcamp presentation project</p></div>
+          <a class="btn-secondary" href="https://fesalalsubie.itch.io/heritage-keeper"
+             style="width:100%;justify-content:center;margin-top:0.5rem;" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Play on itch.io
+          </a>
+          <div class="meta-box">
+            <h4>Screenshots</h4>
+            <div class="screenshot-grid" id="gallery-heritagekeeper"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0 DAYS SINCE LAST ACCIDENT DETAIL -->
+  <div id="detail-zerodays" class="detail-page" style="display:none;">
+
+    <!-- VIDEO HERO -->
+    <div class="detail-hero">
+      <iframe
+        src="https://drive.google.com/file/d/1odLbtA032jt-DyJ8zeqHHiwFWYy5xfxj/preview"
+        allow="autoplay"
+        allowfullscreen
+        title="0 Days Since Last Accident gameplay video">
+      </iframe>
+      <div class="detail-hero-overlay"></div>
+    </div>
+
+    <div class="detail-content">
+      <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
+      <div class="section-label">// 3d endless runner · 2026</div>
+      <h1 class="detail-title">0 Days Since<br>Last Accident</h1>
+      <div class="detail-subtitle">A fast-paced 3D endless runner</div>
+      <div class="detail-tags">
+        <span class="tag">Unity</span><span class="tag">C#</span>
+        <span class="tag">Endless Runner</span><span class="tag">3D</span>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h3>About the Game</h3>
+            <p>0 Days Since Last Accident is a solo-developed 3D endless runner where players dodge increasingly dangerous obstacles while surviving for as long as possible. As the game progresses, both speed and challenge continuously increase, creating an addictive, high-score-focused experience.</p>
+          </div>
+          <div class="detail-section">
+            <h3>My Role</h3>
+            <p><strong>Solo Developer</strong>,</p>
+            <ul>
+              <li>Gameplay Programming</li>
+              <li>Player Controller</li>
+              <li>UI Design</li>
+              <li>Procedural Systems</li>
+              <li>Game Design</li>
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h3>Technical Highlights</h3>
+             <ul>
+              <li>Built a procedural obstacle spawning system.</li>
+              <li>Designed a dynamic difficulty system that increases over time.</li>
+              <li>Developed responsive player movement and collision mechanics.</li>
+              <li>Implemented score tracking, UI, and game-over flow.</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="meta-box"><h4>Platform</h4><p>PC</p></div>
+          <div class="meta-box"><h4>Engine</h4><p>Unity</p></div>
+          <div class="meta-box"><h4>Languages</h4><p>C#</p></div>
+          <div class="meta-box"><h4>Genre</h4><p>Endless Runner</p></div>
+          <a class="btn-secondary" href="https://fesalalsubie.itch.io/0-days-since-last-accident"
+             style="width:100%;justify-content:center;margin-top:0.5rem;" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Play on itch.io
+          </a>
+          <div class="meta-box">
+            <h4>Screenshots</h4>
+            <div class="screenshot-grid" id="gallery-zerodays"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPIDER BALL DETAIL -->
+  <div id="detail-spiderball" class="detail-page" style="display:none;">
+
+    <!-- VIDEO HERO -->
+    <div class="detail-hero">
+      <iframe
+        src="https://drive.google.com/file/d/1DIeASw4yawteycjMvZm-5xfBr7hTItjt/preview"
+        allow="autoplay"
+        allowfullscreen
+        title="Spider Ball gameplay video">
+      </iframe>
+      <div class="detail-hero-overlay"></div>
+    </div>
+
+    <div class="detail-content">
+      <button class="detail-back" onclick="navigate('projects')">&#8592; Back to Projects</button>
+      <div class="section-label">// bootcamp project · 2026</div>
+      <h1 class="detail-title">Spider Ball</h1>
+      <div class="detail-tags">
+        <span class="tag">Unity</span><span class="tag">C#</span><span class="tag">Bootcamp Project</span>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h3>About the Game</h3>
+            <p>Spider Ball is a solo-developed 2D physics puzzle game created during the same Unity bootcamp as Heritage Keeper. Designed with mobile gameplay in mind, players use momentum, physics, and environmental interactions to guide a spider through increasingly challenging levels.</p>
+          </div>
+          <div class="detail-section">
+            <h3>My Role</h3>
+            <p><strong>Solo Developer</strong>,</p>
+            <ul>
+              <li>Gameplay Programming</li>
+              <li>Physics Systems</li>
+              <li>UI Design</li>
+              <li>Level Design</li>
+              <li>Game Design</li>
+            </ul>
+          </div>
+          <div class="detail-section">
+            <h3>Technical Highlights</h3>
+             <ul>
+              <li>Developed custom physics-based movement mechanics.</li>
+              <li>Designed levels around momentum and precision.</li>
+              <li>Implemented responsive controls for mobile gameplay.</li>
+              <li>Built using Unity and C#.</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="meta-box"><h4>Platform</h4><p>PC</p></div>
+          <div class="meta-box"><h4>Engine</h4><p>Unity</p></div>
+          <div class="meta-box"><h4>Languages</h4><p>C#</p></div>
+          <div class="meta-box"><h4>Context</h4><p>Unity bootcamp presentation project</p></div>
+          <div class="meta-box">
+            <h4>Screenshots</h4>
+            <div class="screenshot-grid" id="gallery-spiderball"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -688,6 +1032,21 @@
   </section>
 </div>
 
+<!-- SCREENSHOT LIGHTBOX -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="lightbox-nav prev" onclick="lightboxNav(-1)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="Screenshot" />
+  <button class="lightbox-nav next" onclick="lightboxNav(1)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-left"><strong>Faisal Alsubie</strong> &middot; Built with care &middot; &copy; 2026</div>
@@ -715,41 +1074,170 @@
     requestAnimationFrame(animateCursor);
   }
   animateCursor();
-  document.querySelectorAll('a,button,[onclick]').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.borderColor='var(--primary)';});
-    el.addEventListener('mouseleave',()=>{ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.borderColor='rgba(32,211,238,0.25)';});
+  document.addEventListener('mouseover', e=>{
+    if(e.target.closest('a,button,[onclick],.screenshot-thumb:not(.placeholder)')){
+      ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.borderColor='var(--primary)';
+    }
   });
+  document.addEventListener('mouseout', e=>{
+    if(e.target.closest('a,button,[onclick],.screenshot-thumb:not(.placeholder)')){
+      ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.borderColor='rgba(32,211,238,0.25)';
+    }
+  });
+
+  // NAVIGATION LOADING FEEDBACK
+  const loadBar = document.getElementById('load-bar');
+
+  function runTransition(swapFn){
+    // 1. flash the progress bar so the click registers immediately
+    loadBar.classList.remove('done');
+    void loadBar.offsetWidth; // restart animation
+    loadBar.classList.add('loading');
+
+    // 2. swap content on the very next frame — old page gone, new page in, no in-between state
+    requestAnimationFrame(() => {
+      swapFn();
+      window.scrollTo(0, 0);
+
+      loadBar.classList.remove('loading');
+      loadBar.classList.add('done');
+      setTimeout(() => {
+        loadBar.classList.remove('done');
+        loadBar.style.width = '0%';
+        setTimeout(() => { loadBar.style.width = ''; }, 50);
+      }, 200);
+    });
+  }
+
+  // ── VIDEO PLAYBACK MANAGEMENT ──
+  // Google Drive iframes keep playing even after their container is hidden
+  // (display:none doesn't unload an iframe). Reset src to stop playback,
+  // and restore it from a cached copy the next time that project is opened.
+  function stopAllProjectVideos(){
+    document.querySelectorAll('#project-detail iframe[src]').forEach(f=>{
+      if(f.src && f.src !== 'about:blank'){
+        if(!f.dataset.src) f.dataset.src = f.src;
+        f.src = 'about:blank';
+      }
+    });
+  }
+  function restoreProjectVideos(container){
+    container.querySelectorAll('iframe').forEach(f=>{
+      if(f.dataset.src) f.src = f.dataset.src;
+    });
+  }
 
   // NAVIGATION
   function navigate(page){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('[data-page]').forEach(a=>a.classList.remove('active'));
-    document.getElementById('project-detail').style.display='none';
-    document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
-    if(['home','about','projects','contact'].includes(page)){
-      const el=document.getElementById(page);
-      el.classList.add('active','page-transition');
-      setTimeout(()=>el.classList.remove('page-transition'),400);
-      const lnk=document.querySelector('[data-page="'+page+'"]');
-      if(lnk) lnk.classList.add('active');
-    }
-    window.scrollTo({top:0,behavior:'smooth'});
-    observeFadeIns();
+    runTransition(() => {
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('[data-page]').forEach(a=>a.classList.remove('active'));
+      document.getElementById('project-detail').style.display='none';
+      document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
+      stopAllProjectVideos();
+      if(['home','about','projects','contact'].includes(page)){
+        const el=document.getElementById(page);
+        el.classList.add('active','page-transition');
+        setTimeout(()=>el.classList.remove('page-transition'),400);
+        const lnk=document.querySelector('[data-page="'+page+'"]');
+        if(lnk) lnk.classList.add('active');
+      }
+      observeFadeIns();
+    });
     return false;
   }
 
   function openProject(id){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    const det=document.getElementById('project-detail');
-    det.style.display='block'; det.classList.add('active');
-    document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
-    document.getElementById('detail-'+id).style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
+    runTransition(() => {
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      const det=document.getElementById('project-detail');
+      det.style.display='block'; det.classList.add('active','page-transition');
+      setTimeout(()=>det.classList.remove('page-transition'),400);
+      document.querySelectorAll('.detail-page').forEach(d=>d.style.display='none');
+      stopAllProjectVideos();
+      const target=document.getElementById('detail-'+id);
+      if(target){
+        target.style.display='block';
+        restoreProjectVideos(target);
+      }
+    });
   }
 
   function toggleMenu(){
     document.getElementById('mobileMenu').classList.toggle('open');
   }
+
+  // ══════ SCREENSHOT GALLERIES ══════
+  // Add more image URLs (or local paths like "assets/images/heritage-keeper/1.jpg")
+  // to each array below. Empty slots automatically show as "Add screenshot" placeholders.
+  const galleries = {
+    sheherazade: [
+      'https://img.itch.zone/aW1hZ2UvNDMyMTQxNS8yNTc5MzU4NS5wbmc=/347x500/K7Y618.png'
+    ],
+    letmework: [
+      'https://img.itch.zone/aW1nLzI1NTAwMjMzLnBuZw==/original/pUv%2FF2.png'
+    ],
+    heritagekeeper: ['assets/images/TheHeritageKeeperLogo.png','assets/images/Heritage Keeper1.png','assets/images/Heritage Keeper2.png','assets/images/Heritage Keeper3.png'],
+    zerodays: ['assets/images/0Days1.png','assets/images/0Days2.png','assets/images/0Days3.png','assets/images/0Days4.png'],
+    spiderball: ['assets/images/SpiderBall1.png','assets/images/SpiderBall2.png','assets/images/SpiderBall3.png','assets/images/SpiderBall4.png']
+  };
+  const GALLERY_MIN_SLOTS = { sheherazade: 1, letmework: 1, heritagekeeper: 4, zerodays: 4, spiderball: 4 };
+  let currentGalleryKey = null;
+  let currentIndex = 0;
+
+  function renderGalleries(){
+    Object.keys(galleries).forEach(key=>{
+      const el = document.getElementById('gallery-'+key);
+      if(!el || el.dataset.rendered) return;
+      el.dataset.rendered = 'true';
+      const imgs = galleries[key];
+      imgs.forEach((src,i)=>{
+        const div = document.createElement('div');
+        div.className = 'screenshot-thumb';
+        div.innerHTML = '<img src="'+src+'" alt="Screenshot '+(i+1)+'" loading="lazy">';
+        div.onclick = () => openLightbox(key,i);
+        el.appendChild(div);
+      });
+      const remaining = Math.max(0, (GALLERY_MIN_SLOTS[key] ?? 4) - imgs.length);
+      for(let i=0;i<remaining;i++){
+        const div = document.createElement('div');
+        div.className = 'screenshot-thumb placeholder';
+        div.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg><span>Add screenshot</span>';
+        el.appendChild(div);
+      }
+    });
+  }
+
+  function openLightbox(key,index){
+    if(!galleries[key] || !galleries[key].length) return;
+    currentGalleryKey = key;
+    currentIndex = index;
+    updateLightbox();
+    document.body.classList.add('lightbox-active');
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function updateLightbox(){
+    const imgs = galleries[currentGalleryKey];
+    document.getElementById('lightbox-img').src = imgs[currentIndex];
+    document.getElementById('lightbox-caption').textContent = (currentIndex+1)+' / '+imgs.length;
+  }
+  function closeLightbox(){
+    document.body.classList.remove('lightbox-active');
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  function lightboxNav(dir){
+    const imgs = galleries[currentGalleryKey];
+    currentIndex = (currentIndex + dir + imgs.length) % imgs.length;
+    updateLightbox();
+  }
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('lightbox').classList.contains('active')) return;
+    if(e.key==='Escape') closeLightbox();
+    if(e.key==='ArrowRight') lightboxNav(1);
+    if(e.key==='ArrowLeft') lightboxNav(-1);
+  });
+  document.addEventListener('DOMContentLoaded', renderGalleries);
+  setTimeout(renderGalleries,100);
 
   function observeFadeIns(){
     const els=document.querySelectorAll('.fade-in:not(.visible)');
